@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE controladores SYSTEM "dtds/controladores.dtd">
+
+<controladores>
+
+    <controlador nombre="SesionTest">
+        <hereda-de controlador="Typical"/>
+
+        <accion nombre="iniciarTest"
+                modo="detail"
+                icono="play"
+                clase="ni.edu.uam.ProyectoFinalPOO.acciones.IniciarTestAction"/>
+
+        <accion nombre="finalizarTest"
+                modo="detail"
+                icono="stop"
+                clase="ni.edu.uam.ProyectoFinalPOO.acciones.FinalizarTestAction"/>
+
+        <accion nombre="calificarTest"
+                modo="detail"
+                icono="check-circle"
+                clase="ni.edu.uam.ProyectoFinalPOO.acciones.CalificarTestAction"/>
+
+    </controlador>
+
+</controladores>
