@@ -14,7 +14,7 @@ public class Respuesta {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer oid;
 
-    // OpenXava asigna la sesion sola al editar dentro de la coleccion.
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "SESION_OID")
     private SesionTest sesion;

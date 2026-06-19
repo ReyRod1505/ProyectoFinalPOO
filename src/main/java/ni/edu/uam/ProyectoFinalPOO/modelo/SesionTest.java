@@ -36,10 +36,10 @@ public class SesionTest {
     @Enumerated(EnumType.STRING) @ReadOnly
     private EstadoSesion estado = EstadoSesion.PENDIENTE;
 
-    @ReadOnly @Stereotype("DATETIME")        // <-- Date en vez de LocalDateTime
+    @ReadOnly @Stereotype("DATETIME")
     private Date fechaInicio;
 
-    @ReadOnly @Stereotype("DATETIME")        // <-- Date en vez de LocalDateTime
+    @ReadOnly @Stereotype("DATETIME")
     private Date fechaFin;
 
     @OneToMany(mappedBy = "sesion", cascade = CascadeType.ALL, orphanRemoval = true)
@@ -49,6 +49,17 @@ public class SesionTest {
     @OneToOne(mappedBy = "sesion", cascade = CascadeType.REMOVE)
     @ReadOnly
     private Resultado resultado;
+
+    // Asegura que una sesion nueva se guarde como PENDIENTE (no null).
+    @PrePersist
+    private void alCrear() {
+        if (estado == null) estado = EstadoSesion.PENDIENTE;
+    }
+
+    // Si el estado quedara null, se considera PENDIENTE (arregla sesiones ya creadas).
+    public EstadoSesion getEstado() {
+        return estado == null ? EstadoSesion.PENDIENTE : estado;
+    }
 
     // ---------- Logica de negocio ----------
 
@@ -66,14 +77,14 @@ public class SesionTest {
         this.estado = EstadoSesion.CALIFICADA;
     }
 
-    public boolean estaIniciada()   { return estado == EstadoSesion.INICIADA; }
-    public boolean estaFinalizada() { return estado == EstadoSesion.FINALIZADA; }
-    public boolean estaCalificada() { return estado == EstadoSesion.CALIFICADA; }
+    public boolean estaIniciada()   { return getEstado() == EstadoSesion.INICIADA; }
+    public boolean estaFinalizada() { return getEstado() == EstadoSesion.FINALIZADA; }
+    public boolean estaCalificada() { return getEstado() == EstadoSesion.CALIFICADA; }
 
     @Depends("fechaInicio, fechaFin")
     @Transient
     public long getDuracionMinutos() {
         if (fechaInicio == null || fechaFin == null) return 0;
-        return (fechaFin.getTime() - fechaInicio.getTime()) / 60000L;   // ms -> minutos
+        return (fechaFin.getTime() - fechaInicio.getTime()) / 60000L;
     }
 }
