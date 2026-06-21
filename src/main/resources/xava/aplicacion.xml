@@ -2,23 +2,26 @@
 
 <!DOCTYPE aplicacion SYSTEM "dtds/aplicacion.dtd">
 
-<aplicacion nombre="ProyectoFinalPOO"> 
-	
-	<!--
-	Un m�dulo por defecto se asume para cada
-	controlador en <modulo-defecto/> 
-	-->
-	<modulo-defecto>		  
-		<controlador nombre="Typical"/>		
-	</modulo-defecto>
-	
-	<!--
-	Podemos definir m�dulos adicionales, por ejemplo: 	
-	<modulo nombre="ProfesorSoloLectura">
-		<modelo nombre="Profesor"/>
-		<controlador nombre="Print"/>
-	</modulo>		
-	-->	  
-		
-</aplicacion>
+<aplicacion nombre="ProyectoFinalPOO">
 
+	<modulo nombre="Estudiante">
+		<modelo nombre="Estudiante"/>
+		<controlador nombre="Typical"/>
+	</modulo>
+
+	<modulo nombre="Pregunta">
+		<modelo nombre="Pregunta"/>
+		<controlador nombre="Typical"/>
+	</modulo>
+
+	<modulo nombre="SesionTest">
+		<modelo nombre="SesionTest"/>
+		<controlador nombre="SesionTest"/>
+	</modulo>
+
+	<modulo nombre="Resultado">
+		<modelo nombre="Resultado"/>
+		<controlador nombre="Typical"/>
+	</modulo>
+
+</aplicacion>

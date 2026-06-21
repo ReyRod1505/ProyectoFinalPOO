@@ -11,16 +11,6 @@
                 icono="play"
                 clase="ni.edu.uam.ProyectoFinalPOO.acciones.IniciarTestAction"/>
 
-        <accion nombre="finalizarTest"
-                modo="detail"
-                icono="stop"
-                clase="ni.edu.uam.ProyectoFinalPOO.acciones.FinalizarTestAction"/>
-
-        <accion nombre="calificarTest"
-                modo="detail"
-                icono="check-circle"
-                clase="ni.edu.uam.ProyectoFinalPOO.acciones.CalificarTestAction"/>
-
     </controlador>
 
 </controladores>
