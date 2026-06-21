@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Vocacional</title>
+    <link rel="stylesheet" href="examen.css">
+</head>
+<body>
+<div class="contenedor">
+    <h1>Test Vocacional</h1>
+
+    <div id="pantalla-clave">
+        <p>Ingresa tus datos para comenzar:</p>
+        <input type="text" id="nombre" placeholder="Tu nombre completo">
+        <input type="password" id="clave" placeholder="Contraseña">
+        <button id="btn-entrar">Entrar</button>
+        <p id="error-clave" class="error"></p>
+    </div>
+
+    <div id="pantalla-preguntas" style="display:none;">
+        <p id="info-forma"></p>
+        <div id="lista-preguntas"></div>
+        <button id="btn-enviar">Enviar examen</button>
+    </div>
+
+    <div id="pantalla-resultado" style="display:none;">
+        <h2>Resultado</h2>
+        <p id="res-aciertos"></p>
+        <p id="res-porcentaje"></p>
+        <p id="res-observacion"></p>
+        <p>Ya puedes cerrar esta ventana.</p>
+    </div>
+</div>
+<script src="examen.js"></script>
+</body>
+</html>
