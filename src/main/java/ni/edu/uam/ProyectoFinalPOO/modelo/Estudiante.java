@@ -2,17 +2,19 @@ package ni.edu.uam.ProyectoFinalPOO.modelo;
 
 import java.time.*;
 import javax.persistence.*;
+import javax.validation.constraints.*;   // <-- nuevo import (validacion)
 import org.openxava.annotations.*;
 import lombok.*;
 
 @Entity
 @Getter @Setter
 @View(members=
-        "datos { nombres; apellidos; fechaNacimiento; edad }" +
-                "contacto { carrera; email }" +
+        "datos { nombres; apellidos; fechaNacimiento; edad; sexo }" +
+                "formacion { estudiosRealizados; profesion }" +
+                "contacto { email }" +
                 "acceso { password }"
 )
-@Tab(properties="nombres, apellidos, fechaNacimiento, carrera, email")
+@Tab(properties="nombres, apellidos, fechaNacimiento, sexo, profesion, email")
 public class Estudiante {
 
     @Id @Hidden @GeneratedValue(strategy=GenerationType.IDENTITY)
@@ -29,8 +31,15 @@ public class Estudiante {
     @Required
     private LocalDate fechaNacimiento;
 
-    @Column(length=40)
-    private String carrera;
+    @Enumerated(EnumType.STRING)
+    @Column(length=20)
+    private Sexo sexo;
+
+    @Column(length=100)
+    private String estudiosRealizados;
+
+    @Column(length=60)
+    private String profesion;
 
     @Column(length=80)
     @Stereotype("EMAIL")
@@ -44,7 +53,19 @@ public class Estudiante {
     @Depends("fechaNacimiento")
     public int getEdad() {
         if (fechaNacimiento == null) return 0;
-        return Period.between(fechaNacimiento, LocalDate.now()).getYears();
+        int edad = Period.between(fechaNacimiento, LocalDate.now()).getYears();
+        return edad < 0 ? 0 : edad;   // nunca muestra negativo
+    }
+
+    // Validacion: bloquea el guardado si la fecha es imposible
+    @AssertTrue(message="La fecha de nacimiento no es valida: debe ser pasada y dar una edad entre 5 y 100 anios.")
+    @Hidden
+    public boolean isFechaNacimientoValida() {
+        if (fechaNacimiento == null) return true;   // del null se encarga @Required
+        LocalDate hoy = LocalDate.now();
+        if (fechaNacimiento.isAfter(hoy)) return false;   // fecha futura
+        int edad = Period.between(fechaNacimiento, hoy).getYears();
+        return edad >= 5 && edad <= 100;
     }
 
     @PrePersist @PreUpdate

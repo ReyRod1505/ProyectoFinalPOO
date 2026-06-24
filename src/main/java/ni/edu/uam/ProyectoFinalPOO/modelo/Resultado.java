@@ -6,8 +6,11 @@ import lombok.*;
 
 @Entity
 @Getter @Setter
-@Tab(properties = "sesion.estudiante.nombres, sesion.estudiante.apellidos, aciertos, totalPreguntas, porcentaje")
-@View(members =
+@Tab(properties =
+        "sesion.estudiante.nombres, sesion.estudiante.apellidos, sesion.forma, " +
+                "aciertos, totalPreguntas, percentil, categoria, porcentaje, " +
+                "observacion, sesion.fechaFin"
+)@View(members =
         "sesion;" +
                 "marcador [" +
                 "   aciertos, totalPreguntas, porcentaje" +
@@ -16,18 +19,28 @@ import lombok.*;
 )
 public class Resultado {
 
-    @Id @Hidden
+    @Id
+    @Hidden
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer oid;
 
-    @OneToOne(fetch = FetchType.LAZY) @Required
+    @OneToOne(fetch = FetchType.LAZY)
+    @Required
     @JoinColumn(name = "SESION_OID")
     @DescriptionsList(descriptionProperties = "estudiante.nombres, estudiante.apellidos")
-    @NoCreate @NoModify
+    @NoCreate
+    @NoModify
     private SesionTest sesion;
 
     @ReadOnly
     private int aciertos;
+
+    @ReadOnly
+    private int percentil;
+
+    @Column(length = 40)
+    @ReadOnly
+    private String categoria;
 
     @ReadOnly
     private int totalPreguntas;
@@ -35,19 +48,23 @@ public class Resultado {
     @ReadOnly
     private double porcentaje;
 
-    @TextArea @ReadOnly
+    @TextArea
+    @ReadOnly
     private String observacion;
 
-    public void calcularPorcentaje() {
-        this.porcentaje = (totalPreguntas > 0)
-                ? Math.round((aciertos * 100.0 / totalPreguntas) * 100.0) / 100.0   // 2 decimales
+    /**
+     * Unico punto de calificacion. Lo llama EnviarExamenServlet.
+     */
+    public void calificar(int aciertos, int totalPreguntas, Forma forma) {
+        this.aciertos = Math.max(0, aciertos);
+        this.totalPreguntas = totalPreguntas;
+        this.percentil = Baremo.percentil(forma, this.aciertos);
+        this.categoria = Baremo.categoria(this.percentil);
+        // Porcentaje lineal: se CONSERVA solo para estadistica/reportes.
+        this.porcentaje = totalPreguntas > 0
+                ? Math.round((this.aciertos * 10000.0) / totalPreguntas) / 100.0
                 : 0.0;
-    }
-
-    public void generarObservacion() {
-        if (porcentaje >= 90)      observacion = "Excelente";
-        else if (porcentaje >= 70) observacion = "Satisfactorio";
-        else if (porcentaje >= 60) observacion = "Aceptable";
-        else                       observacion = "Necesita refuerzo";
+        this.observacion = "Percentil " + percentil + " (" + categoria + "). "
+                + aciertos + " de " + totalPreguntas + " aciertos.";
     }
 }

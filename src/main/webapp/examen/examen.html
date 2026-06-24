@@ -4,34 +4,51 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Test Vocacional</title>
-    <link rel="stylesheet" href="examen.css">
+    <link rel="stylesheet" href="examen.css?v=2">
 </head>
 <body>
 <div class="contenedor">
     <h1>Test Vocacional</h1>
 
+    <!-- PANTALLA 1: ACCESO -->
     <div id="pantalla-clave">
-        <p>Ingresa tus datos para comenzar:</p>
-        <input type="text" id="nombre" placeholder="Tu nombre completo">
+        <p>Selecciona tu nombre e ingresa tu contraseña:</p>
+        <select id="estudiante">
+            <option value="">-- Selecciona tu nombre --</option>
+        </select>
         <input type="password" id="clave" placeholder="Contraseña">
-        <button id="btn-entrar">Entrar</button>
+        <button id="btn-entrar">Continuar</button>
         <p id="error-clave" class="error"></p>
     </div>
 
+    <!-- PANTALLA 2: BIENVENIDA -->
+    <div id="pantalla-bienvenida" style="display:none;">
+        <h2 id="bienvenida-saludo"></h2>
+        <div id="bienvenida-instrucciones" class="instrucciones"></div>
+        <button id="btn-iniciar">Iniciar examen</button>
+        <p id="error-bienvenida" class="error"></p>
+    </div>
+
+    <!-- PANTALLA 3: PREGUNTAS -->
     <div id="pantalla-preguntas" style="display:none;">
+        <div id="cronometro">Tiempo restante: --:--</div>
         <p id="info-forma"></p>
         <div id="lista-preguntas"></div>
         <button id="btn-enviar">Enviar examen</button>
     </div>
 
+    <!-- PANTALLA 4: RESULTADO -->
     <div id="pantalla-resultado" style="display:none;">
         <h2>Resultado</h2>
+        <p id="res-titulo" class="res-titulo"></p>
         <p id="res-aciertos"></p>
-        <p id="res-porcentaje"></p>
-        <p id="res-observacion"></p>
-        <p>Ya puedes cerrar esta ventana.</p>
+        <div class="interpretacion">
+            <p><strong>Interpretación:</strong></p>
+            <p id="res-interpretacion"></p>
+        </div>
+        <p class="cerrar">Ya puedes cerrar esta ventana.</p>
     </div>
 </div>
-<script src="examen.js"></script>
+<script src="examen.js?v=2"></script>
 </body>
 </html>

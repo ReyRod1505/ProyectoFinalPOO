@@ -1,7 +1,8 @@
-package ni.edu.uam.ProyectoFinalPOO.modelo;   // <-- CONSERVA TU PAQUETE
+package ni.edu.uam.ProyectoFinalPOO.modelo;
 
 import javax.persistence.*;
 import org.openxava.annotations.*;
+import org.openxava.jpa.*;
 import lombok.*;
 
 @Entity
@@ -18,7 +19,8 @@ public class Pregunta {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer oid;
 
-    @Required
+    // El numero lo asigna el programa por forma (ver alCrear). El admin no lo escribe.
+    @ReadOnly
     private int numero;
 
     @Enumerated(EnumType.STRING) @Required
@@ -29,6 +31,24 @@ public class Pregunta {
 
     @Column(length = 1) @Required
     private String respuestaCorrecta;
+
+    /**
+     * Antes de guardar una pregunta nueva, le asigna el siguiente numero
+     * correlativo DENTRO de su forma (A y B numeran por separado).
+     * Solo actua si el numero aun no fue asignado (== 0).
+     */
+    @PrePersist
+    private void alCrear() {
+        if (numero == 0 && forma != null) {
+            Integer max = XPersistence.getManager()
+                    .createQuery(
+                            "select max(p.numero) from Pregunta p where p.forma = :f",
+                            Integer.class)
+                    .setParameter("f", forma)
+                    .getSingleResult();
+            this.numero = (max == null ? 0 : max) + 1;
+        }
+    }
 
     // Normaliza a mayuscula sin espacios. Lombok respeta este setter manual.
     public void setRespuestaCorrecta(String respuestaCorrecta) {

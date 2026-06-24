@@ -23,12 +23,19 @@ input[type="text"], input[type="password"] {
 input[type="text"]:focus, input[type="password"]:focus {
     outline: none; border-color: #667eea;
 }
+select {
+    width: 100%; padding: 12px 16px; margin-bottom: 16px;
+    border: 2px solid #e2e8f0; border-radius: 8px; font-size: 1rem;
+    background: #fff; cursor: pointer;
+}
+select:focus { outline: none; border-color: #667eea; }
 button {
     width: 100%; padding: 14px; background: #667eea; color: #fff;
     border: none; border-radius: 8px; font-size: 1rem; font-weight: 600;
     cursor: pointer; transition: background 0.2s;
 }
 button:hover { background: #5a67d8; }
+button:disabled { background: #a0aec0; cursor: not-allowed; }
 .pregunta {
     background: #f7fafc; border: 1px solid #e2e8f0; border-radius: 10px;
     padding: 18px; margin-bottom: 16px;
@@ -45,3 +52,70 @@ button:hover { background: #5a67d8; }
     border-radius: 12px; padding: 24px;
 }
 .resultado p { font-size: 1.1rem; }
+#cronometro {
+    position: sticky;
+    top: 0;
+    background: #667eea;
+    color: #fff;
+    font-size: 1.3em;
+    font-weight: bold;
+    text-align: center;
+    padding: 10px;
+    border-radius: 8px;
+    margin-bottom: 15px;
+    z-index: 10;
+}
+#cronometro.poco-tiempo {
+    background: #e74c3c;
+    animation: parpadeo 1s infinite;
+}
+@keyframes parpadeo {
+    50% { opacity: 0.55; }
+}
+
+/* ===== PANTALLA DE BIENVENIDA / INSTRUCCIONES ===== */
+#bienvenida-saludo {
+    text-align: center; color: #667eea; margin-bottom: 20px;
+}
+.instrucciones {
+    background: #f7fafc; border: 1px solid #e2e8f0; border-radius: 10px;
+    padding: 22px; margin-bottom: 20px;
+}
+.instrucciones h3 {
+    color: #4a5568; text-align: center; margin-bottom: 14px;
+    font-size: 1.15rem; letter-spacing: 0.5px;
+}
+.instrucciones > p { color: #4a5568; }
+.ejemplo {
+    background: #fff; border: 1px solid #e2e8f0; border-left: 4px solid #667eea;
+    border-radius: 8px; padding: 14px 16px; margin: 14px 0;
+}
+.ejemplo p { margin-bottom: 8px; color: #2d3748; }
+.ejemplo ul { list-style: none; padding-left: 8px; }
+.ejemplo li { padding: 3px 0; color: #4a5568; }
+.instrucciones .resumen {
+    margin-top: 16px; padding-top: 14px; border-top: 1px solid #e2e8f0;
+    color: #2d3748;
+}
+.instrucciones .aviso {
+    background: #fffaf0; border: 1px solid #fbd38d; border-radius: 8px;
+    padding: 12px 14px; margin-top: 14px; margin-bottom: 0; color: #7b341e;
+}
+
+/* ===== PANTALLA DE RESULTADO ===== */
+#pantalla-resultado {
+    text-align: center; background: #f0fff4; border: 2px solid #9ae6b4;
+    border-radius: 12px; padding: 28px;
+}
+#pantalla-resultado h2 { text-align: center; }
+.res-titulo {
+    font-size: 1.6rem; font-weight: 700; color: #276749; margin-bottom: 8px;
+}
+#res-aciertos { font-size: 1.1rem; color: #2d3748; margin-bottom: 18px; }
+.interpretacion {
+    background: #fff; border: 1px solid #c6f6d5; border-radius: 10px;
+    padding: 18px; margin: 0 auto 18px; text-align: left; max-width: 480px;
+}
+.interpretacion p { margin-bottom: 8px; }
+.interpretacion p:last-child { margin-bottom: 0; color: #4a5568; }
+.cerrar { color: #718096; font-size: 0.95rem; margin-bottom: 0; }

@@ -19,7 +19,7 @@ public class SesionTest {
     private Integer oid;
 
     @ManyToOne
-    @Required
+    @ReadOnly
     @DescriptionsList(descriptionProperties="nombres, apellidos")
     @NoCreate @NoModify
     private Estudiante estudiante;
@@ -43,13 +43,13 @@ public class SesionTest {
     @OneToMany(mappedBy="sesion", cascade=CascadeType.ALL, orphanRemoval=true)
     private Collection<Respuesta> respuestas;
 
-    @OneToOne(mappedBy="sesion")
+    @OneToOne(mappedBy="sesion", cascade=CascadeType.ALL, orphanRemoval=true)
+    @ReadOnly
     private Resultado resultado;
 
     @PrePersist
     private void alCrear() {
         if (estado == null) estado = EstadoSesion.PENDIENTE;
-        if (fechaInicio == null) fechaInicio = new Date();
     }
 
     public EstadoSesion getEstado() {

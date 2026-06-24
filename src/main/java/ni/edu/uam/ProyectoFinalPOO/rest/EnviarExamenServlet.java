@@ -1,4 +1,4 @@
-package ni.edu.uam.ProyectoFinalPOO.rest;   // <-- AJUSTA al paquete donde lo tengas (web o rest)
+package ni.edu.uam.ProyectoFinalPOO.rest;
 
 import java.io.*;
 import java.util.*;
@@ -35,6 +35,11 @@ public class EnviarExamenServlet extends HttpServlet {
             out.print("{\"ok\":false,\"error\":\"Clave incorrecta\"}"); return;
         }
 
+        // Defensa: no re-calificar una sesion ya enviada
+        if (sesion.getEstado() == EstadoSesion.CALIFICADA) {
+            out.print("{\"ok\":false,\"error\":\"Este examen ya fue enviado\"}"); return;
+        }
+
         List<Pregunta> preguntas = em.createQuery(
                         "from Pregunta p where p.forma = :f order by p.numero", Pregunta.class)
                 .setParameter("f", sesion.getForma()).getResultList();
@@ -53,23 +58,24 @@ public class EnviarExamenServlet extends HttpServlet {
             em.persist(r);
         }
         int total = preguntas.size();
-        double porcentaje = total > 0 ? Math.round(aciertos * 10000.0 / total) / 100.0 : 0;
-        String obs;
-        if (porcentaje >= 90) obs = "Excelente";
-        else if (porcentaje >= 70) obs = "Satisfactorio";
-        else if (porcentaje >= 60) obs = "Aceptable";
-        else obs = "Necesita refuerzo";
+
+        // --- Calificacion por baremo: un solo punto de verdad ---
         Resultado res = new Resultado();
         res.setSesion(sesion);
-        res.setAciertos(aciertos);
-        res.setTotalPreguntas(total);
-        res.setPorcentaje(porcentaje);
-        res.setObservacion(obs);
+        res.calificar(aciertos, total, sesion.getForma());
+
         sesion.setEstado(EstadoSesion.CALIFICADA);
         sesion.setFechaFin(new Date());
         em.persist(res);
         XPersistence.commit();
-        out.print("{\"ok\":true,\"aciertos\":" + aciertos + ",\"total\":" + total
-                + ",\"porcentaje\":" + porcentaje + ",\"observacion\":\"" + obs + "\"}");
+
+        out.print("{\"ok\":true"
+                + ",\"aciertos\":" + res.getAciertos()
+                + ",\"total\":" + res.getTotalPreguntas()
+                + ",\"percentil\":" + res.getPercentil()
+                + ",\"categoria\":\"" + res.getCategoria() + "\""
+                + ",\"porcentaje\":" + res.getPorcentaje()
+                + ",\"observacion\":\"" + res.getObservacion() + "\""
+                + "}");
     }
 }

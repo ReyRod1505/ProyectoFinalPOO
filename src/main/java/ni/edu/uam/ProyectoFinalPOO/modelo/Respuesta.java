@@ -6,25 +6,30 @@ import lombok.*;
 
 @Entity
 @Getter @Setter
-@Tab(properties = "pregunta.numero, pregunta.enunciado, valorMarcado, correcta")
-@View(members = "pregunta; valorMarcado, correcta")   // 'sesion' se oculta aqui (forma correcta)
+@Tab(properties =
+        "sesion.estudiante.nombres, sesion.estudiante.apellidos, sesion.forma, " +
+                "pregunta.numero, pregunta.enunciado, valorMarcado, correcta")
+@View(members = "pregunta; valorMarcado, correcta")
 public class Respuesta {
 
     @Id @Hidden
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer oid;
 
-
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "SESION_OID")
+    @ReadOnly
+    @NoCreate @NoModify
     private SesionTest sesion;
 
     @ManyToOne(fetch = FetchType.LAZY) @Required
     @DescriptionsList(descriptionProperties = "numero, enunciado, forma")
+    @ReadOnly
     @NoCreate @NoModify
     private Pregunta pregunta;
 
     @Column(length = 1)
+    @ReadOnly
     private String valorMarcado;
 
     @ReadOnly
